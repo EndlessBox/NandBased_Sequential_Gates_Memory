@@ -15,4 +15,6 @@ CHIP Register {
 
     PARTS:
     // Put your code here:
+    Byte(in=in[0..7], load=load, out=out[0..7]);
+    Byte(in=in[8..15], load=load, out=out[8..15]);
 }
