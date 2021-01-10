@@ -1,0 +1,59 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/03/a/RAM8.hdl
+
+/**
+ * Memory of 8 registers, each 16 bit-wide. Out holds the value
+ * stored at the memory location specified by address. If load==1, then 
+ * the in value is loaded into the memory location specified by address 
+ * (the loaded value will be emitted to out from the next time step onward).
+ */
+
+CHIP RAM4 {
+    IN in[16], load, address[2];
+    OUT out[16];
+
+    PARTS:
+
+    Not(in=address[0], out=NotAdd0);
+    Not(in=address[1], out=NotAdd1);
+
+    Way16And1(a=in, b=NotAdd1, out=inAndNotAdd1);
+    Way16And1(a=inAndNotAdd1, b=NotAdd0, out=r1Input);
+    
+    And(a=load, b=NotAdd1, out=loadAndNotAdd1);
+    And(a=loadAndNotAdd1, b=NotAdd0, out=r1Load);
+
+    Way16And1(a=in, b=NotAdd1, out=inAndNtAdd1);
+    Way16And1(a=inAndNtAdd1, b=address[0], out=r2Input);
+
+    And(a=load, b=NotAdd1, out=loadAndNtAdd1);
+    And(a=loadAndNtAdd1, b=address[0], out=r2Load);
+
+    Way16And1(a=in, b=address[1], out=inAndAddd1);
+    Way16And1(a=inAndAddd1, b=NotAdd0, out=r3Input);
+
+
+    And(a=load, b=address[1], out=loadAndAdd1);
+    And(a=loadAndAdd1, b=NotAdd0, out=r3Load);
+
+
+    Way16And1(a=in, b=address[1], out=inAndAdd1);
+    Way16And1(a=inAndNotAdd1, b=address[0], out=r4Input);
+
+
+    And(a=load, b=address[1], out=loadAndAddd1);
+    And(a=loadAndAddd1, b=address[0], out=r4Load);
+
+
+
+    Register(in=r1Input, load=r1Load, out=outR1);
+    Register(in=r2Input, load=r2Load, out=outR2);
+    Register(in=r3Input, load=r3Load, out=outR3);
+    Register(in=r4Input, load=r4Load, out=outR4);
+
+    Mux4Way16(a=outR1, b=outR2, c=outR3, d=outR4, sel=address, out=out);
+
+
+}
