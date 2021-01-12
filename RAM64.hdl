@@ -16,4 +16,8 @@ CHIP RAM64 {
 
     PARTS:
     // Put your code here:
+    DMux(in=load, sel=address[5], a=LoadRam1, b=LoadRam2);
+    RAM32(in=in, load=LoadRam1, address=address[0..4], out=outRam1);
+    RAM32(in=in, load=LoadRam2, address=address[0..4], out=outRam2);
+    Mux16(a=outRam1, b=outRam2, sel=address[5], out=out);
 }

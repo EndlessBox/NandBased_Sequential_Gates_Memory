@@ -40,7 +40,7 @@ CHIP RAM4 {
 
 
     Way16And1(a=in, b=address[1], out=inAndAdd1);
-    Way16And1(a=inAndNotAdd1, b=address[0], out=r4Input);
+    Way16And1(a=inAndAdd1, b=address[0], out=r4Input);
 
 
     And(a=load, b=address[1], out=loadAndAddd1);

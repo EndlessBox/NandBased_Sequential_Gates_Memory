@@ -1,0 +1,18 @@
+/**
+ * Memory of 256 registers, each 16 bit-wide. Out holds the value
+ * stored at the memory location specified by address. If load==1, then 
+ * the in value is loaded into the memory location specified by address 
+ * (the loaded value will be emitted to out from the next time step onward).
+ */
+
+CHIP RAM256 {
+    IN in[16], load, address[8];
+    OUT out[16];
+
+    PARTS:
+    // Put your code here:
+    DMux(in=load, sel=address[7], a=LoadRam1, b=LoadRam2);
+    RAM128(in=in, load=LoadRam1, address=address[0..6], out=outRam1);
+    RAM128(in=in, load=LoadRam2, address=address[0..6], out=outRam2);
+    Mux16(a=outRam1, b=outRam2, sel=address[7], out=out);
+}
