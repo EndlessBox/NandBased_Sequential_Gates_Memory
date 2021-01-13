@@ -12,22 +12,21 @@ CHIP PC {
 
     PARTS:
     Not(in=reset, out=notReset);
-
-    Mux16(a=outRegister, b=in, sel=load, out=outInMuxRegister);
-
-    Mux16(a=outInMuxRegister, b=outRegister, sel=incOrReset, out=outInputMux);
     
-    Way16And1(a=outInputMux, b=notReset, out=outReset);
-
-    Inc16(in=outReset, out=outInc);
-    Mux16(a=outReset, b=outInc, sel=inc, out=outFinalInc);
-    
+    Mux16(a=inInc, b=in, sel=load, out=registerMuxIn);
 
 
-    Or(a=inc, b=reset, out=incOrReset);
-    And(a=incOrReset, b=load, out=flagsOr);
+    Way16And1(a=registerMuxIn,b=notReset, out=inAndNotReset);
+    Or(a=resetOrInc, b=load, out=flagsOr);
     
     
-    Register(in=outFinalInc, load=flagsOr, out=outRegister, out=out);
+    Register(in=inAndNotReset, load=flagsOr, out=outRegister, out=out);
+    Inc16(in=outRegister, out=inTmpInc);
+    Mux16(a=outRegister, b=inTmpInc, sel=inc, out=inInc);
+    
+    
+    Or(a=reset, b=inc, out=resetOrInc);
+
+
 
  }
